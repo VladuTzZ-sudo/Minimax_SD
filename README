@@ -1,0 +1,195 @@
+MAIN
+	-am folosit argumentele din linie de comanda pentru a descifra cerinta ( strcmp )
+	-cerinta 1, am rezolvat-o in primul IF
+	-cerinta 2&3 le-am rezolvat in al doilea IF, (difera o ultima functie la final)(minimax/alpha)
+	-bonusul este rezolvat in ultimul IF
+
+-c1
+	:: Am citit datele de intrare in 3 variabile si o matrice alocata dinamic.
+	:: Am transformat matricea de caractere intr-una binara unde R==1, iar B==2;
+	:: IN FISIERUL trie.h este definita structura pentru acest task
+	
+	EXPLICAREA FUNCTIILOR DIN TRIE.C
+		:: int castigator();
+			> primeste o matrice si verifica daca aceasta poate fi castigatoare
+			> parcurgerea matricii porneste din colt stanga-sus,deci voi verifica la fiecare
+			pas daca exista pe linia curenta , in spre dreapta o linie castigatoare, si
+			daca pe coloana curenta , in jos, exista o coloana castigatoare, de asemenea pe
+			diagonala inspre dreapta-jos, daca exista o coloana castigatoare, sau inspre
+			stanga-jos.
+		
+			return: cifra castigatoare
+
+		:: ConnectNode *createNode()
+			> aloca memorie pentru un nod din structura Connect
+		
+		:: int **generate2Matrix()
+			> este apelata atunci cand stiu ca exista un singur fiu si il genereaza
+
+		:: int ***generateMatrix()
+			> este apelata atunci cand stiu ca un nod poate avea mai multi fii
+			> Acesta salveaza toti fratii intr-un cub de numere, pe care il returneaza.
+
+		:: void insertNode()
+			> este o functie recursiva care are ca rol construirea arborelui, si printarea
+			acestuia.
+			> VERIFICA CATI FII poate avea un NOD curent si apeleaza in functie de raspuns
+			generate(1/2)MAtrix().
+			> INAINTE de acesta totusi verifica ca nodul curent nu este castigator.
+			> Printeaza primul copil al nodului curent , apeland functia printNode().
+			> Inainte de a printa rudele, reapeleaza functia insert , nodul curent devenind
+			primul copil.
+			> dupa ce foloseste intregul CUB de numere, va elibera memoria cubului, chiar
+			daca exista o functia de stergere a arborelui, totusi CUBUL nu va fi adaugat la
+			arbore, ci doar matricile din el.
+	
+		:: void printNode()
+			> printeaza cu tabul corespunzator matricile, si atunci cand trebuie sa o printeze			 pe ultima nu mai pune SPACE dupa ultimul caracter de pe linie.
+
+		:: freeTree()
+			> elibereaza memoria , recursiv.
+
+-c2 + -c3
+	:: AM FOLOSIT O CITIRE de tip caracter cu caracter folosind fscanf si fgetc
+	:: AM APELAT LA O STRUCTURA ADITIONALA DE TIP COADA - precum cea folosita in laborator
+	:: ASTFEL DE ACESTA CERINTA SE LEAGA SI FISIERELE : "queue.c" "deque.c".
+	:: LA FIECARE CITIRE CU FSCANF DE PE O LINIE , incerc sa vad daca este un nod sau o frunza.
+	:: FOLOSESC DOUA COZI: 
+			"coada" - pentru a stoca valoarea nodului
+			"frunza" - pentru a stoca natura nodului 
+	:: FUNCTIA ATOI - folosita pentru convertirea char-int.
+	
+PENTRU REZOLVAREA CERINTEI -c2 : AM APELAT DUPA CITIRE FUNCTIA Algoritm()
+
+PENTRU REZOLVAREA CERINTEI -c3 : AM APELAT DUPA CITIRE FUNCTIA AlphaBeta()
+
+FUNCTIA freeMulticai() este valabila ambelor cerinte, precum si inchiderea fisierelor.
+STRUCTURA MinMaxNode - este folosita la rezolvarea ambelor cerinte.
+
+	EXPLICAREA FUNCTIILOR DIN FISIERUL "MinMax.c"
+		:: createMinMaxNode()
+			> Aloca memorie pentru un nod corespunzator structurii MinMaxNode
+		
+		:: recursivitate()
+			> Nodul curent va fi singurul si primul copil al unui nod parinte
+			> functia are misiunea de a aloca memorie pentru frati la dreapta (next) si anume 			 un numar de "indice" frati.
+		
+		:: insertMinMaxNode()
+			> Are rolul de a aloca memorie pentru intreg arborele si a stabili 
+			valoarea frunzelor
+			> este o functie recursiva.
+			> desi la inceput arborele nu reprezinta decat nodul root, acesta functie va 
+			rand pe rand fiecare nivel din arbore , stabilind daca un nod care a fost adaugat			 este frunza, daca nu este frunza, atunci se va aloca memorie pentru n copii 
+			folosind functia recursivitate().
+			
+		FRUNZA - codificata din main cu -1.
+		ORICE NOD PENTRU CARE A FOST DOAR ALOCATA MEMORIA - codicat cu 0 - este neutru.
+		UN NOD INTERN - codificat cu 1.  	
+		
+		:: FUNCTIILE printGivenLevel() & printMinMaxNode()
+			> in functia printMinMaxNode am folosit un for care sa ajute la controlarea 
+			tab-ului.
+			> functia printGiven - printeaza fiecare nivel din arbore.
+
+		:: FUNCTIILE FindMin() & FindMax() 
+			> au rolul de return valorea minima/maxima dintre copiii unui Nod.
+
+		:: FUNCTIILE Algoritm() & AlgoritmLevel()
+			> in functia Algoritm()
+				// tinand cont ca doresc o parcurgere de la nivelul maxim la radacina
+				trebuia sa stiu ce fel de nivel este (MIN/MAX).
+				// folosesc variabila OK pentru a controla acest lucru intr-un for
+				si apelez functia AlgoritmLevel().
+
+			> Incep de pe ultimul nivel care contine si altceva in afara de frunze.
+			> Atribui nodurilor parinte valoarea Min/Max.
+
+		:: printFinal()
+			> afiseaza in modul cerut de cerinta arborele.
+		
+		:: freeMulticai()
+			> elibereaza recursiv memoria arborelui.
+
+	EXPLICAREA FUNCTIILOR FOLOSITE PENTRU TASK03:
+		:: AlphaBeta()
+			> folosita pentru a apela functia recursiva AlphaBetaLevel().
+
+		:: AlphaBetaLevel()
+			> INTAI DORESTE SA AJUNGE PE NIVELUL MAXIM - apoi analizeaza nodul curent si 
+			INCEARCA SA PARCURGE LA NODUL->next , daca acesta exista.
+			> EXISTA DOUA CAZURI TRATATE IN OGLINDA. CAZUL NIVELULUI MIN si CAZUL NIv. MAX
+			> DACA MA AFLU PE UN NIVEL DE MAXIM:
+				- verific daca este prima data cand incerc sa schimb valorile alpha si
+				beta - initial sunt -inf +inf ( sau -4000 si 4000 )
+					>> daca este adevarat, atunci valoarea alpha va fi maximul dintre					 copii , folosesc functia FindMax;
+					>> actualizez valoarea lui alpha
+					>> si reapelez functia pentru fratele sau din dreapta, avand 
+					grija ca viitorul beta si fie alpha din aceasta functie.
+				
+				- apoi , daca alpha si beta au fost schimbate anterior, atunci:
+					>> incerc sa vad daca pot sa elimin copii.
+					>> APOI incerc sa aflu maximul din copilul/copiii ramasi.
+					>> REACTUALIZEZ VALOAREA ALPHA DACA ESTE NECESAR 
+					>> reapelez functia pentru fratele sau din dreapta cu valorile 
+					schimbate!
+			>> DACA MA AFLU PE UN NIVEL DE MINIM , ANALOG!
+
+		:: FUNCTIILE AlphaEliminare() si BetaEliminare()
+			>  au ca rol elminarea tuturor fratilor la dreapta , daca nodul curent nu 
+			corespunde regulilor algoritmului Alpha Beta Pruning.
+
+
+
+
+$$ - BONUS - $$ - BONUS - $$ - BONUS - $$ - BONUS - $$ - BONUS - $$ - BONUS - $$ :
+
+
+	
+Am folosit o structura noua definita in fisierul "bonus.h"
+
+In main.c , citirea este asemenea cerintei 2&3.
+Folosesc o coada pentru salvarea numerelor.
+IN loc sa extrag din coada un singur element, voi extrage (players) elemente.
+
+APELEZ FUNCTIA AlgoBonus.
+	EXPLICAREA FUNCTIILOR DIN "bonus.c"
+		:: createBonusNode()
+			> aloca memoria pentru un nod.
+			
+		:: recursivitateBonus()
+			> aloca memorie pentru un numar de "indice" copii.
+			
+		:: insertBonusNode()
+			> ANALOG insertMinMaxNode() de la cerinta 2.
+			> diferenta : in loc sa extrag o data dequeue(valoare) am folosit un for
+			pentru a extrage "players" valori pentru un nod din coada.
+		
+		:: printBonus()
+			> ANALOG printFinal() de la cerinta 2.
+			> diferenta : in loc sa printez o data valorea nodului, folosesc un for
+			pentru a printa toate valorile dintr-un nod si "[" "]".
+		
+		:: FUNCTIILE FindBonMax() & FindBonMin()
+			> ANALOG FindMin & FindMax de la cerinta 2 doar ca au ca rol returnarea prin
+			pointer-ul pozmax/pozmin a indicelui copilului cu valorea MAX/MIN.
+
+		:: FUNCTIILE recursivmaxim() & recursivminim()
+			> au ca rol returnarea fiecarei valoare (pentru fiecare jucator) din nodul cerut			 
+		:: BonusLevel()
+			> ANALOG AlgoritmLevel() - cerinta 2
+		 
+		:: AlgoBonus()
+			> ANALOG Algoritm() - cerinta 2
+		
+		:: freeBonus()
+			> eliberarea memoriei recursiv
+			> analog cerinta 2&3, doar ca acum trebuie sa elimine si vectorul cu valorile 
+			celor "players" jucatori.
+
+MATEI VLAD CRISTIAN
+311 CC
+ 	
+	
+
+	
+		
